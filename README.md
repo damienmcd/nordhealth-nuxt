@@ -7,7 +7,7 @@ This is my Nuxt solution to the task set in the Nordhealth interview for the Sen
 First clone the repository using the Terminal application of your choice:
 
 ```bash
-git clone https://github.com/damienmcd/nordhealth-vue
+git clone https://github.com/damienmcd/nordhealth-nuxt
 ```
 
 Install the dependencies (you can use whichever package manager you like - npm, pnpm, bun, yarn, etc.):
