@@ -10,21 +10,8 @@
       class: 'n-reset'
     },
     bodyAttrs: {
-      id: 'register',
-      class: 'page-register'
+      id: 'sign-up',
+      class: 'page-sign-up'
     }
   })
 </script>
-
-<style>
-  html,
-  body,
-  main,
-  #__nuxt {
-    block-size: 100%;
-  }
-
-  body {
-    background: var(--n-color-surface-raised);
-  }
-</style>

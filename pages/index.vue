@@ -1,6 +1,6 @@
 <template>
   <provet-stack
-    class="register-stack"
+    class="sign-up-stack"
     direction="vertical"
     align-items="center"
     justify-content="center"
@@ -13,7 +13,7 @@
       <provet-stack direction="vertical" align-items="stretch" gap="l">
         <p>Enter your email and password.</p>
         <form
-          id="register_form"
+          id="sign-up-form"
           class="n-stack n-gap-m"
           @submit.prevent="handleForm"
         >
@@ -33,23 +33,35 @@
               @input="changeEmail"
               @blur="validateEmail"
             ></provet-input>
-            <p>{{ email }}</p>
 
             <provet-input
               id="password"
               ref="input-password"
               label="Password"
-              type="email"
-              name="email"
-              placeholder="Email"
+              type="password"
+              name="password"
+              placeholder="Password"
               size="m"
               expand
               required
               @change="changePassword"
               @input="changePassword"
               @blur="validatePassword"
-            ></provet-input>
-            <p>{{ password }}</p>
+            >
+              <provet-button
+                slot="end"
+                aria-describedby="password-tooltip"
+                type="button"
+                square
+                @click="togglePasswordVisibility"
+              >
+                <provet-icon name="interface-edit-on"></provet-icon>
+                <provet-icon name="interface-edit-off"></provet-icon>
+              </provet-button>
+            </provet-input>
+            <provet-tooltip id="password-tooltip"
+              >Show / hide password</provet-tooltip
+            >
 
             <provet-button variant="primary" type="submit" size="m">
               Sign Up
@@ -94,16 +106,28 @@
     console.log(event.target.value)
   }
 
+  const togglePasswordVisibility = () => {
+    const inputPasswordHtmlElement: HTMLElement | any | null =
+      document.getElementById('password')
+    inputPasswordHtmlElement.type =
+      inputPasswordHtmlElement.type == 'password' ? 'text' : 'password'
+  }
+
   const handleForm = () => {
     console.log('Handle form')
   }
 </script>
 
-<style>
-  .register-stack {
+<style scoped>
+  .sign-up-stack {
     inline-size: 90%;
     max-inline-size: 600px;
     margin: var(--n-space-xl) auto;
     row-gap: var(--n-space-xl);
+  }
+
+  [type='password'] provet-icon[name='interface-edit-off'],
+  [type='text'] provet-icon[name='interface-edit-on'] {
+    display: none;
   }
 </style>
