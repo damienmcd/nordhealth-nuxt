@@ -7,5 +7,9 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/eslint', '@nuxt/test-utils', '@nuxt/image'],
 
-  css: ['@provetcloud/css']
+  css: ['@provetcloud/css'],
+
+  typescript: {
+    typeCheck: true
+  }
 })

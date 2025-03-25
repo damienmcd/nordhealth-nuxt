@@ -6,7 +6,11 @@
     justify-content="center"
     gap="m"
   >
-    <NuxtImg src="/provet_cloud_new_logo_570x80.png" />
+    <NuxtImg
+      src="/provet_cloud_new_logo_570x80.png"
+      alt="Provet Cloud logo"
+      class="provet-cloud-logo"
+    />
     <provet-card padding="l">
       <h1 slot="header" class="n-font-size-l">Sign Up for Provet Cloud</h1>
 
@@ -29,9 +33,8 @@
               size="m"
               expand
               required
-              @change="changeEmail"
-              @input="changeEmail"
               @blur="validateEmail"
+              :error="emailError"
             ></provet-input>
 
             <provet-input
@@ -74,43 +77,57 @@
   </provet-stack>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
   import { Stack } from '@provetcloud/web-components'
   import { Input } from '@provetcloud/web-components'
   import { Button } from '@provetcloud/web-components'
 
   import { ref } from 'vue'
 
-  const email = ref('')
-  const password = ref('')
+  const formIsDirty: Ref<boolean> = ref(false)
+  const email: Ref<string> = ref('')
+  const emailError: Ref<string> = ref('')
+  const password: Ref<string> = ref('')
+  const passwordError: Ref<string> = ref('')
 
-  const inputEmailElement = useTemplateRef('input-email')
-  console.log({ inputEmailElement })
+  // const changeEmail = (event: Event) => {
+  //   formIsDirty.value = true
+  //   const emailAddress: string = (event.target as HTMLInputElement).value
 
-  const inputPasswordElement = useTemplateRef('input-password')
-  console.log({ inputPasswordElement })
+  //   email.value = emailAddress
+  // }
 
-  const changeEmail = (event: any) => {
-    email.value = event.target.value
+  const validateEmail = (event: Event) => {
+    formIsDirty.value = true
+    const emailInput: string = (event.target as HTMLInputElement).value
+
+    if (emailInput === '') {
+      emailError.value = 'This field is required'
+    } else if (!useIsValidEmail(emailInput)) {
+      emailError.value = 'Please enter a valid email address'
+    } else {
+      emailError.value = ''
+      email.value = emailInput
+    }
   }
 
-  const validateEmail = (event: any) => {
-    console.log(event.target.value)
+  const changePassword = (event: Event) => {
+    password.value = (event.target as HTMLInputElement).value
   }
 
-  const changePassword = (event: any) => {
-    password.value = event.target.value
-  }
-
-  const validatePassword = (event: any) => {
-    console.log(event.target.value)
+  const validatePassword = (event: Event) => {
+    // console.log((event.target as HTMLInputElement).value)
   }
 
   const togglePasswordVisibility = () => {
-    const inputPasswordHtmlElement: HTMLElement | any | null =
-      document.getElementById('password')
-    inputPasswordHtmlElement.type =
-      inputPasswordHtmlElement.type == 'password' ? 'text' : 'password'
+    const inputPasswordHtmlElement: HTMLInputElement | null =
+      document.getElementById('password') as HTMLInputElement
+    console.log({ inputPasswordHtmlElement })
+    console.log(inputPasswordHtmlElement.type)
+    if (inputPasswordHtmlElement !== null) {
+      inputPasswordHtmlElement.type =
+        inputPasswordHtmlElement.type == 'password' ? 'text' : 'password'
+    }
   }
 
   const handleForm = () => {
@@ -124,6 +141,10 @@
     max-inline-size: 600px;
     margin: var(--n-space-xl) auto;
     row-gap: var(--n-space-xl);
+  }
+
+  .provet-cloud-logo {
+    max-block-size: var(--n-space-xl);
   }
 
   [type='password'] provet-icon[name='interface-edit-off'],
