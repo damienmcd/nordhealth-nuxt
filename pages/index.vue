@@ -34,7 +34,7 @@
               expand
               required
               @blur="validateEmail"
-              :error="emailError"
+              :error="errors.email.label"
             ></provet-input>
 
             <provet-input
@@ -47,10 +47,18 @@
               size="m"
               expand
               required
-              @change="changePassword"
-              @input="changePassword"
               @blur="validatePassword"
+              :error="errors.password.label"
             >
+              <div slot="hint">
+                Password must contain at least
+                <strong
+                  >1 number, 1 Uppercase, 1 Lowercase, 1 from ! $ % # * @
+                  &</strong
+                >
+                and be between <strong>8</strong> and
+                <strong>16</strong> characters in length.
+              </div>
               <provet-button
                 slot="end"
                 aria-describedby="password-tooltip"
@@ -65,6 +73,37 @@
             <provet-tooltip id="password-tooltip"
               >Show / hide password</provet-tooltip
             >
+
+            <provet-checkbox
+              id="offers"
+              ref="input-offers"
+              name="offers"
+              size="l"
+              @change="updateOffers"
+            >
+              <div slot="label">
+                Would you like to receive occasional offers and news from Provet
+                Cloud?
+              </div>
+            </provet-checkbox>
+
+            <provet-checkbox
+              id="policies"
+              ref="input-policies"
+              name="policies"
+              size="l"
+              @change="validatePolicies"
+              :error="errors.policies.label"
+            >
+              <div slot="label">
+                Do you agree to the Provet Cloud
+                <NuxtLink
+                  to="https://www.provet.cloud/privacy-notice"
+                  target="_blank"
+                  >Privacy Policy</NuxtLink
+                >?<span aria-hidden="true" class="n-required">*</span>
+              </div>
+            </provet-checkbox>
 
             <provet-button variant="primary" type="submit" size="m">
               Sign Up
@@ -82,56 +121,134 @@
   import { Input } from '@provetcloud/web-components'
   import { Button } from '@provetcloud/web-components'
 
-  import { ref } from 'vue'
+  type form = {
+    email: string
+    password: string
+    offers: boolean
+    policies: boolean
+  }
 
-  const formIsDirty: Ref<boolean> = ref(false)
-  const email: Ref<string> = ref('')
-  const emailError: Ref<string> = ref('')
-  const password: Ref<string> = ref('')
-  const passwordError: Ref<string> = ref('')
-
-  // const changeEmail = (event: Event) => {
-  //   formIsDirty.value = true
-  //   const emailAddress: string = (event.target as HTMLInputElement).value
-
-  //   email.value = emailAddress
-  // }
-
-  const validateEmail = (event: Event) => {
-    formIsDirty.value = true
-    const emailInput: string = (event.target as HTMLInputElement).value
-
-    if (emailInput === '') {
-      emailError.value = 'This field is required'
-    } else if (!useIsValidEmail(emailInput)) {
-      emailError.value = 'Please enter a valid email address'
-    } else {
-      emailError.value = ''
-      email.value = emailInput
+  type errors = {
+    email: {
+      error: string
+      label: string
+    }
+    password: {
+      error: string
+      label: string
+    }
+    policies: {
+      error: string
+      label: string
     }
   }
 
-  const changePassword = (event: Event) => {
-    password.value = (event.target as HTMLInputElement).value
+  const formIsDirty: Ref<boolean> = ref(false)
+  const errors: Ref<errors> = ref({
+    email: { error: '', label: '' },
+    password: { error: '', label: '' },
+    policies: { error: '', label: '' }
+  })
+  const form: Ref<form> = ref({
+    email: '',
+    password: '',
+    offers: false,
+    policies: false
+  })
+
+  const validateEmail = () => {
+    formIsDirty.value = true
+
+    const inputEmailHtmlElement: HTMLInputElement | null =
+      document.getElementById('email') as HTMLInputElement
+
+    const emailInput: string = inputEmailHtmlElement.value
+
+    if (emailInput === '') {
+      errors.value.email.error = 'required'
+      errors.value.email.label = 'Please complete this required field.'
+    } else if (!useIsValidInputField('email', emailInput)) {
+      errors.value.email.error = 'invalid'
+      errors.value.email.label = 'Email must be formatted correctly.'
+    } else {
+      errors.value.email.error = ''
+      errors.value.email.label = ''
+
+      form.value.email = emailInput
+    }
   }
 
-  const validatePassword = (event: Event) => {
-    // console.log((event.target as HTMLInputElement).value)
+  const validatePassword = () => {
+    formIsDirty.value = true
+
+    const inputPasswordHtmlElement: HTMLInputElement | null =
+      document.getElementById('password') as HTMLInputElement
+
+    const passwordInput: string = inputPasswordHtmlElement.value
+
+    if (passwordInput === '') {
+      errors.value.password.error = 'required'
+      errors.value.password.label = 'Please complete this required field.'
+    } else if (!useIsValidInputField('password', passwordInput)) {
+      errors.value.password.error = 'invalid'
+      errors.value.password.label = 'Please enter a valid password.'
+    } else {
+      errors.value.password.error = ''
+      errors.value.password.label = ''
+
+      form.value.password = passwordInput
+    }
   }
 
   const togglePasswordVisibility = () => {
     const inputPasswordHtmlElement: HTMLInputElement | null =
       document.getElementById('password') as HTMLInputElement
-    console.log({ inputPasswordHtmlElement })
-    console.log(inputPasswordHtmlElement.type)
+
     if (inputPasswordHtmlElement !== null) {
       inputPasswordHtmlElement.type =
         inputPasswordHtmlElement.type == 'password' ? 'text' : 'password'
     }
   }
 
+  const updateOffers = () => {
+    formIsDirty.value = true
+
+    const inputOffersHtmlElement: HTMLInputElement | null =
+      document.getElementById('offers') as HTMLInputElement
+
+    const offersInput: boolean = inputOffersHtmlElement.checked
+    form.value.policies = offersInput
+  }
+
+  const validatePolicies = () => {
+    formIsDirty.value = true
+
+    const inputPoliciesHtmlElement: HTMLInputElement | null =
+      document.getElementById('policies') as HTMLInputElement
+
+    const policiesInput: boolean = inputPoliciesHtmlElement.checked
+
+    if (!policiesInput) {
+      errors.value.policies.error = 'required'
+      errors.value.policies.label = 'Please complete this required field.'
+    } else {
+      errors.value.policies.error = ''
+      errors.value.policies.label = ''
+    }
+    form.value.policies = policiesInput
+  }
+
+  const validateForm = () => {
+    validateEmail()
+    validatePassword()
+    validatePolicies()
+    formIsDirty.value = true
+  }
+
   const handleForm = () => {
     console.log('Handle form')
+    validateForm()
+    console.log()
   }
 </script>
 
@@ -150,5 +267,10 @@
   [type='password'] provet-icon[name='interface-edit-off'],
   [type='text'] provet-icon[name='interface-edit-on'] {
     display: none;
+  }
+
+  .n-required {
+    color: var(--n-color-status-danger);
+    margin-inline-start: var(--n-space-xs);
   }
 </style>
