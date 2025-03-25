@@ -10,8 +10,8 @@
       class: 'n-reset'
     },
     bodyAttrs: {
-      id: 'sign-up',
-      class: 'page-sign-up'
+      id: 'page-sign-up-register',
+      class: 'page-sign-up-register'
     }
   })
 </script>

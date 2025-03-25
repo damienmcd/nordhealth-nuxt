@@ -19,7 +19,7 @@
         <form
           id="sign-up-form"
           class="n-stack n-gap-m"
-          @submit.prevent="handleForm"
+          @submit.prevent="handleFormSubmit"
         >
           <input type="hidden" name="csrfmiddlewaretoken" value="" />
           <provet-stack direction="vertical" align-items="stretch" gap="l">
@@ -33,8 +33,9 @@
               size="m"
               expand
               required
-              @blur="validateEmail"
+              :disabled="formProcessing"
               :error="errors.email.label"
+              @blur="validateEmail"
             ></provet-input>
 
             <provet-input
@@ -47,17 +48,14 @@
               size="m"
               expand
               required
-              @blur="validatePassword"
+              :disabled="formProcessing"
               :error="errors.password.label"
+              @blur="validatePassword"
             >
               <div slot="hint">
-                Password must contain at least
-                <strong
-                  >1 number, 1 Uppercase, 1 Lowercase, 1 from ! $ % # * @
-                  &</strong
-                >
-                and be between <strong>8</strong> and
-                <strong>16</strong> characters in length.
+                Password must contain at least 1 number, 1 Uppercase, 1
+                Lowercase, 1 Special Character (! $ % # * @ &) and be between
+                <strong>8</strong> and <strong>16</strong> characters in length.
               </div>
               <provet-button
                 slot="end"
@@ -79,6 +77,7 @@
               ref="input-offers"
               name="offers"
               size="l"
+              :disabled="formProcessing"
               @change="updateOffers"
             >
               <div slot="label">
@@ -92,22 +91,38 @@
               ref="input-policies"
               name="policies"
               size="l"
-              @change="validatePolicies"
+              :disabled="formProcessing"
               :error="errors.policies.label"
+              @change="validatePolicies"
             >
               <div slot="label">
                 Do you agree to the Provet Cloud
                 <NuxtLink
                   to="https://www.provet.cloud/privacy-notice"
                   target="_blank"
+                  external
                   >Privacy Policy</NuxtLink
                 >?<span aria-hidden="true" class="n-required">*</span>
               </div>
             </provet-checkbox>
 
-            <provet-button variant="primary" type="submit" size="m">
+            <provet-button
+              variant="primary"
+              type="submit"
+              size="m"
+              :disabled="formHasErrors"
+              :loading="formProcessing"
+            >
               Sign Up
             </provet-button>
+            <p
+              v-show="formHasErrors"
+              id="errors"
+              ref="display-errors"
+              class="n-error"
+            >
+              {{ formErrors }}
+            </p>
           </provet-stack>
         </form>
       </provet-stack>
@@ -120,6 +135,8 @@
   import { Stack } from '@provetcloud/web-components'
   import { Input } from '@provetcloud/web-components'
   import { Button } from '@provetcloud/web-components'
+
+  const router = useRouter()
 
   type form = {
     email: string
@@ -143,7 +160,16 @@
     }
   }
 
+  type user =
+    | {
+        id: string
+        createdAt: string
+      }
+    | any
+
   const formIsDirty: Ref<boolean> = ref(false)
+  const formProcessing: Ref<boolean> = ref(false)
+  const formErrors: Ref<string> = ref('')
   const errors: Ref<errors> = ref({
     email: { error: '', label: '' },
     password: { error: '', label: '' },
@@ -245,11 +271,52 @@
     formIsDirty.value = true
   }
 
-  const handleForm = () => {
-    console.log('Handle form')
+  const handleFormSubmit = async () => {
+    formProcessing.value = true
     validateForm()
-    console.log()
+
+    if (!formHasErrors.value) {
+      const {
+        data: user,
+        status: status,
+        error: error
+      } = await useFetch(
+        'https://67e1530c58cc6bf7852555e6.mockapi.io/nordhealth/register',
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: form.value
+        }
+      )
+
+      const newUser: user = user.value
+
+      if (error.value) {
+        formErrors.value = error.value.message
+      } else if (status.value === 'success' && newUser?.id) {
+        router.push({ name: 'welcome', query: { id: newUser.id } })
+      } else {
+        console.error('User Not Registered')
+        formErrors.value = 'Please complete all required form fields correctly.'
+      }
+    }
+
+    formProcessing.value = false
   }
+
+  const formHasErrors = computed(() => {
+    return (
+      errors.value.email.error !== '' ||
+      errors.value.password.error !== '' ||
+      errors.value.policies.error !== ''
+    )
+  })
+
+  onMounted(() => {
+    const inputEmailHtmlElement: HTMLInputElement | null =
+      document.getElementById('email') as HTMLInputElement
+    inputEmailHtmlElement.focus()
+  })
 </script>
 
 <style scoped>
