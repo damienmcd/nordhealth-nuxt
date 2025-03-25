@@ -60,6 +60,8 @@
               <provet-button
                 slot="end"
                 aria-describedby="password-tooltip"
+                id="password-visibility-toggle"
+                title="Password Visibility Toggle"
                 type="button"
                 square
                 @click="togglePasswordVisibility"
@@ -138,36 +140,6 @@
 
   const router = useRouter()
 
-  type form = {
-    email: string
-    password: string
-    offers: boolean
-    policies: boolean
-  }
-
-  type errors = {
-    email: {
-      error: string
-      label: string
-    }
-    password: {
-      error: string
-      label: string
-    }
-    policies: {
-      error: string
-      label: string
-    }
-  }
-
-  type user =
-    | {
-        id: string
-        createdAt: string
-      }
-    | any
-
-  const formIsDirty: Ref<boolean> = ref(false)
   const formProcessing: Ref<boolean> = ref(false)
   const formErrors: Ref<string> = ref('')
   const errors: Ref<errors> = ref({
@@ -183,8 +155,6 @@
   })
 
   const validateEmail = () => {
-    formIsDirty.value = true
-
     const inputEmailHtmlElement: HTMLInputElement | null =
       document.getElementById('email') as HTMLInputElement
 
@@ -205,8 +175,6 @@
   }
 
   const validatePassword = () => {
-    formIsDirty.value = true
-
     const inputPasswordHtmlElement: HTMLInputElement | null =
       document.getElementById('password') as HTMLInputElement
 
@@ -237,8 +205,6 @@
   }
 
   const updateOffers = () => {
-    formIsDirty.value = true
-
     const inputOffersHtmlElement: HTMLInputElement | null =
       document.getElementById('offers') as HTMLInputElement
 
@@ -247,8 +213,6 @@
   }
 
   const validatePolicies = () => {
-    formIsDirty.value = true
-
     const inputPoliciesHtmlElement: HTMLInputElement | null =
       document.getElementById('policies') as HTMLInputElement
 
@@ -268,7 +232,6 @@
     validateEmail()
     validatePassword()
     validatePolicies()
-    formIsDirty.value = true
   }
 
   const handleFormSubmit = async () => {
@@ -289,15 +252,21 @@
         }
       )
 
-      const newUser: user = user.value
+      if (status.value === 'success') {
+        const newUser: user = user.value as user
 
-      if (error.value) {
+        if (newUser.id) {
+          useState('userRegistered', () => true)
+          useState('user', () => newUser)
+          router.push({ name: 'welcome' })
+        }
+      } else if (error.value) {
+        console.error('User Not Registered', error.value)
         formErrors.value = error.value.message
-      } else if (status.value === 'success' && newUser?.id) {
-        router.push({ name: 'welcome', query: { id: newUser.id } })
       } else {
         console.error('User Not Registered')
-        formErrors.value = 'Please complete all required form fields correctly.'
+        formErrors.value =
+          'There was an error when registering. Please try again later.'
       }
     }
 
@@ -316,6 +285,17 @@
     const inputEmailHtmlElement: HTMLInputElement | null =
       document.getElementById('email') as HTMLInputElement
     inputEmailHtmlElement.focus()
+  })
+
+  useHead({
+    htmlAttrs: {
+      lang: 'en'
+    },
+    bodyAttrs: {
+      id: 'page-sign-up-register',
+      class: 'page-sign-up-register'
+    },
+    title: 'Provet Cloud - Register'
   })
 </script>
 

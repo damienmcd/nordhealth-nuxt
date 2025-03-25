@@ -18,7 +18,7 @@
         <p>Thank you for signing up to Provet Cloud.</p>
         <p>
           Please verify your account using the link we sent to the email address
-          you provided when registering.
+          you provided when registering ({{ user.email }}).
         </p>
         <p>
           You can start using Provet Cloud as soon as you have verified your
@@ -35,11 +35,22 @@
   import { Input } from '@provetcloud/web-components'
   import { Button } from '@provetcloud/web-components'
 
-  const route = useRoute()
-  console.log({ route })
+  const user: Ref<user> = useState('user')
 
   definePageMeta({
-    layout: 'page'
+    layout: 'page',
+    middleware: ['auth']
+  })
+
+  useHead({
+    htmlAttrs: {
+      lang: 'en'
+    },
+    bodyAttrs: {
+      id: 'page-application',
+      class: 'page-application'
+    },
+    title: 'Provet Cloud - Welcome'
   })
 </script>
 
