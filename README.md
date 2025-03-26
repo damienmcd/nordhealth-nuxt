@@ -1,8 +1,12 @@
 # Nordhealth Provet Cloud Interview Task
 
-This is my Nuxt solution to the task set in the Nordhealth interview for the Senior Frontend Engineer role.
+This project is a Nuxt solution to the task set in the Nordhealth interview for the Senior Frontend Engineer role.
 
 Live demo is available at [https://damienmcd-nordhealth.netlify.app/](https://damienmcd-nordhealth.netlify.app/)
+
+A dummy API was set up for this project using [https://mockapi.io/](mockapi.io).
+
+All data will be removed from the mock API account after presentation of this project.
 
 ## Setting up the project
 
