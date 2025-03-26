@@ -8,6 +8,13 @@ A dummy API was set up for this project using [https://mockapi.io/](mockapi.io).
 
 All data will be removed from the mock API account after presentation of this project.
 
+## The Assignment
+
+"Create a client-side only rendered Nuxt 3 application that allows people to sign up for a product. If you don't have any experience with Nuxt 3, it's OK to only use Vue 3. The form should contain fields for email and password, which should be required and show an error if no value is entered. The password field should have a way to make the password visible. The user should be able to choose to receive occasional product updates and announcements. Once signed up, they should be presented with a success page.
+
+Please use the Provet Cloud Design System ([https://provetcloud.design/](https://provetcloud.design/)) appropriately.
+Read [https://provetcloud.design/web-components/#installation-1](https://provetcloud.design/web-components/#installation-1) to learn how to use the Provet components in Vue. If possible, use TypeScript; however, JavaScript is also fine."
+
 ## Setting up the project
 
 First clone the repository using the Terminal application of your choice:
