@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  modules: ['@nuxt/eslint', '@nuxt/test-utils', '@nuxt/image'],
+  modules: ['@nuxt/eslint', '@nuxt/test-utils/module', '@nuxt/image'],
 
   css: ['@provetcloud/css'],
 

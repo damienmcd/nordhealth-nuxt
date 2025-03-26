@@ -15,7 +15,7 @@
       <h1 slot="header" class="n-font-size-l">Sign Up for Provet Cloud</h1>
 
       <provet-stack direction="vertical" align-items="stretch" gap="l">
-        <p>Enter your email and password.</p>
+        <p>Enter your Email and Password, and agree to the Privacy Policy.</p>
         <form
           id="sign-up-form"
           class="n-stack n-gap-m"
@@ -33,8 +33,9 @@
               size="m"
               expand
               required
+              v-focus
               :disabled="formProcessing"
-              :error="errors.email.label"
+              :error="errors.email.label ? errors.email.label : undefined"
               @blur="validateEmail"
             ></provet-input>
 
@@ -49,7 +50,7 @@
               expand
               required
               :disabled="formProcessing"
-              :error="errors.password.label"
+              :error="errors.password.label ? errors.password.label : undefined"
               @blur="validatePassword"
             >
               <div slot="hint">
@@ -279,12 +280,6 @@
       errors.value.password.error !== '' ||
       errors.value.policies.error !== ''
     )
-  })
-
-  onMounted(() => {
-    const inputEmailHtmlElement: HTMLInputElement | null =
-      document.getElementById('email') as HTMLInputElement
-    inputEmailHtmlElement.focus()
   })
 
   useHead({

@@ -6,11 +6,13 @@
     justify-content="center"
     gap="m"
   >
-    <NuxtImg
-      src="/provet_cloud_new_logo_570x80.png"
-      alt="Provet Cloud logo"
-      class="provet-cloud-logo"
-    />
+    <NuxtLink to="/">
+      <NuxtImg
+        src="/provet_cloud_new_logo_570x80.png"
+        alt="Provet Cloud logo"
+        class="provet-cloud-logo"
+      />
+    </NuxtLink>
     <provet-card padding="l">
       <h1 slot="header" class="n-font-size-l">Welcome to Provet Cloud</h1>
 
