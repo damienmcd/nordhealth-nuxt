@@ -1,4 +1,3 @@
-// @vitest-environment nuxt
 import { describe, it, expect } from 'vitest'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import App from '../../app.vue'

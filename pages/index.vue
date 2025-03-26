@@ -33,7 +33,6 @@
               size="m"
               expand
               required
-              v-focus
               :disabled="formProcessing"
               :error="errors.email.label ? errors.email.label : undefined"
               @blur="validateEmail"
@@ -142,7 +141,7 @@
   const router = useRouter()
 
   const formProcessing: Ref<boolean> = ref(false)
-  const formErrors: Ref<string> = ref('')
+  const formErrors: Ref<string> = ref('Please complete all required fields.')
   const errors: Ref<errors> = ref({
     email: { error: '', label: '' },
     password: { error: '', label: '' },
