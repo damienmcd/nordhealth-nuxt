@@ -2,6 +2,8 @@
 
 This is my Nuxt solution to the task set in the Nordhealth interview for the Senior Frontend Engineer role.
 
+Live demo is available at [https://damienmcd-nordhealth.netlify.app/](https://damienmcd-nordhealth.netlify.app/)
+
 ## Setting up the project
 
 First clone the repository using the Terminal application of your choice:
@@ -71,6 +73,15 @@ Locally preview production build:
 ```bash
 # npm
 npm run preview
+```
+
+## Tests
+
+Run unit tests:
+
+```bash
+# npm
+npm run test
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
