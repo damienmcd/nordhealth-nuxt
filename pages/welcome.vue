@@ -7,7 +7,7 @@
     gap="m"
   >
     <NuxtLink to="/">
-      <NuxtImg
+      <img
         src="/provet_cloud_new_logo_570x80.png"
         alt="Provet Cloud logo"
         class="provet-cloud-logo"
